@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Devlet Hastanesi - Personel Yönetim Sistemi</title>
+  <!-- The app stays fully usable when third-party CDNs are unavailable. -->
+  <link rel="stylesheet" href="offline-ui.css">
+  <script src="offline-runtime.js"></script>
+  <script src="github-pages-runtime.js"></script>
+  <link rel="stylesheet" href="styles.css?build=v80">
+  <link rel="stylesheet" href="security.css">
+  <link rel="stylesheet" href="enterprise-risk-center.css">
+  <link rel="stylesheet" href="governance-control-center.css">
+  <link rel="stylesheet" href="identity-center.css">
+  <link rel="stylesheet" href="access-review.css">
+  <link rel="stylesheet" href="kvkk-governance.css">
+  <link rel="stylesheet" href="disaster-recovery-reporting.css">
+  <link rel="stylesheet" href="data-quality.css">
+  <link rel="stylesheet" href="critical-alerts.css">
+  <link rel="stylesheet" href="mobile-staff.css">
+  <link rel="stylesheet" href="executive-panels.css">
+  <link rel="stylesheet" href="patient-flow.css">
+  <link rel="stylesheet" href="clinical-results.css">
+  <link rel="stylesheet" href="medication-safety.css">
+  <link rel="stylesheet" href="antibiotic-stewardship.css">
+  <link rel="stylesheet" href="infection-command-center.css">
+  <link rel="stylesheet" href="patient-safety-center.css">
+  <link rel="stylesheet" href="clinical-risk-center.css">
+  <link rel="stylesheet" href="training-center.css">
+  <link rel="stylesheet" href="or-icu-center.css">
+  <link rel="stylesheet" href="sterilization-center.css">
+  <link rel="stylesheet" href="blood-transfusion-center.css">
+  <link rel="stylesheet" href="clinical-command-center.css">
+  <link rel="stylesheet" href="clinical-research-center.css">
+  <link rel="stylesheet" href="care-coordination.css">
+  <link rel="stylesheet" href="mm-center.css">
+  <link rel="stylesheet" href="patient-experience.css">
+  <link rel="stylesheet" href="patient-feedback-center.css">
+  <link rel="stylesheet" href="patient-rights.css">
+  <link rel="stylesheet" href="quality-improvement.css">
+  <link rel="stylesheet" href="clinical-nutrition-center.css">
+  <link rel="stylesheet" href="medication-reconciliation.css">
+  <link rel="stylesheet" href="medical-device-center.css">
+  <link rel="stylesheet" href="clinical-protocol-compliance.css">
+  <link rel="stylesheet" href="sepsis-monitoring.css">
+  <link rel="stylesheet" href="surgical-safety-center.css">
+  <link rel="stylesheet" href="patient-prevention-center.css">
+  <link rel="stylesheet" href="patient-identification-center.css">
+  <link rel="stylesheet" href="patient-transfer-center.css">
+  <link rel="stylesheet" href="specimen-safety-center.css">
+  <link rel="stylesheet" href="discharge-safety-center.css">
+  <link rel="stylesheet" href="patient-education-center.css">
+  <link rel="stylesheet" href="pain-management-center.css">
+  <link rel="stylesheet" href="palliative-care-center.css">
+  <link rel="stylesheet" href="production-readiness.css">
+  <link rel="stylesheet" href="enterprise-hub.css">
+  <link rel="stylesheet" href="signature-center.css">
+  <link rel="stylesheet" href="integration-sla.css">
+  <link rel="stylesheet" href="market-command-center.css">
+  <link rel="stylesheet" href="it-service-center.css">
+  <link rel="stylesheet" href="next-stage-center.css">
+  <link rel="stylesheet" href="transformation-center.css">
+  <link rel="stylesheet" href="committee-center.css">
+  <link rel="stylesheet" href="reporting-center.css">
+  <link rel="stylesheet" href="hospital-control-tower.css">
+  <link rel="stylesheet" href="project-download.css">
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#0891b2">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+</head>
+<body>
+  <div id="login-screen" class="min-h-screen flex items-center justify-center bg-slate-950 px-4"></div>
+  <div id="app" class="hidden min-h-screen bg-slate-950 text-slate-100">
+    <div class="flex min-h-screen">
+      <aside id="sidebar" class="w-64 shrink-0 border-r border-white/10 bg-white/5 backdrop-blur lg:block hidden"></aside>
+      <div class="flex-1 flex flex-col min-h-screen">
+        <header id="app-topbar" class="hidden lg:flex items-center justify-between border-b border-white/10 bg-white/5 backdrop-blur px-6 py-3">
+          <div><p class="text-[10px] uppercase tracking-widest text-cyan-300" data-i18n="project_download.workspace_label">Hastane PYS</p><p class="text-xs text-slate-400" data-i18n="project_download.workspace_hint">Çalışma alanı işlemleri</p></div>
+          <div class="flex items-center gap-2">
+            <button id="topbar-notif-btn" type="button" class="relative min-h-[44px] rounded-xl px-3 py-2 text-sm text-slate-300 hover:bg-white/10 hover:text-white transition" data-i18n-aria-label="project_download.notifications" aria-label="Bildirimler"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true" class="h-4 w-4"><path d="M18 9a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="project_download.notifications">Bildirimler</span></button>
+            <button id="project-download-btn" type="button" class="btn-secondary flex items-center gap-2 min-h-[44px] px-3 text-sm" data-i18n-aria-label="project_download.button" data-i18n-title="project_download.button" aria-label="Projeyi indir" title="Projeyi indir"><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg><span data-i18n="project_download.button">Projeyi indir</span></button>
+          </div>
+        </header>
+        <header class="flex items-center justify-between border-b border-white/10 bg-white/5 backdrop-blur px-4 py-3 lg:hidden">
+          <div class="flex items-center gap-2 flex-1">
+            <button id="mobile-menu-btn" type="button" class="btn-secondary text-xs px-3 py-1.5" aria-expanded="false" aria-controls="mobile-menu">☰ Menü</button>
+            <span class="text-xl">🏥</span>
+            <span class="font-bold text-white text-sm">Hastane PYS</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button id="mobile-notif-btn" type="button" class="relative p-2 rounded-lg hover:bg-white/10 transition" aria-label="Bildirimler">🔔<span id="mobile-notif-badge" class="notif-badge" style="display:none">0</span></button>
+            <button id="mobile-project-download-btn" type="button" class="p-2 rounded-lg hover:bg-white/10 transition" data-i18n-aria-label="project_download.button" data-i18n-title="project_download.button" aria-label="Projeyi indir" title="Projeyi indir">
+              <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M5 16v3h14v-3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+            </button>
+            <button id="mobile-profile-btn" class="p-2 rounded-lg hover:bg-white/10 transition" aria-label="Profil" onclick="location.hash='profile'">👤</button>
+            <button id="mobile-settings-btn" class="p-2 rounded-lg hover:bg-white/10 transition" aria-label="Ayarlar" onclick="location.hash='settings'">⚙️</button>
+          </div>
+        </header>
+        <main id="content" class="flex-1 p-4 lg:p-8 overflow-y-auto"></main>
+        <!-- Mobile Bottom Nav -->
+        <nav id="mobile-bottom-nav" class="lg:hidden fixed bottom-0 left-0 right-0 z-30 bg-slate-900/95 backdrop-blur border-t border-white/10 flex justify-around py-2 px-1 safe-area-bottom">
+          <a href="#dashboard" class="mob-nav-item flex flex-col items-center gap-0.5 text-[10px] text-slate-400 hover:text-cyan-300 transition px-2 py-1 rounded-lg" data-page="dashboard"><span class="text-lg">📊</span><span>Panel</span></a>
+          <a href="#personnel" class="mob-nav-item flex flex-col items-center gap-0.5 text-[10px] text-slate-400 hover:text-cyan-300 transition px-2 py-1 rounded-lg" data-page="personnel"><span class="text-lg">👥</span><span>Personel</span></a>
+          <a href="#schedule" class="mob-nav-item flex flex-col items-center gap-0.5 text-[10px] text-slate-400 hover:text-cyan-300 transition px-2 py-1 rounded-lg" data-page="schedule"><span class="text-lg">📅</span><span>Nöbet</span></a>
+          <a href="#attendance" class="mob-nav-item flex flex-col items-center gap-0.5 text-[10px] text-slate-400 hover:text-cyan-300 transition px-2 py-1 rounded-lg" data-page="attendance"><span class="text-lg">⏰</span><span>Puantaj</span></a>
+          <a href="#announcements" class="mob-nav-item flex flex-col items-center gap-0.5 text-[10px] text-slate-400 hover:text-cyan-300 transition px-2 py-1 rounded-lg" data-page="announcements"><span class="text-lg">📝</span><span>Duyuru</span></a>
+        </nav>
+      </div>
+    </div>
+    <div id="mobile-menu" class="hidden fixed inset-0 z-40 lg:hidden">
+      <div class="absolute inset-0 bg-black/60" id="mobile-overlay"></div>
+      <div id="mobile-sidebar" class="absolute left-0 top-0 h-full w-72 bg-slate-900 border-r border-white/10 shadow-2xl transform -translate-x-full transition-transform"></div>
+    </div>
+  </div>
+  <p id="project-download-status" hidden role="status" aria-live="polite"></p>
+  <script type="module" src="main.js?build=v95"></script>
+</body>
+</html>
