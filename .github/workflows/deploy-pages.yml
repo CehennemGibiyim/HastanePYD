@@ -1,0 +1,66 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Build complete project file manifest
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import json
+          import shutil
+
+          root = Path('.')
+          mirror = root / '_project-file-source'
+          files = []
+          for path in sorted(root.rglob('*')):
+              if not path.is_file():
+                  continue
+              relative = path.relative_to(root).as_posix()
+              if relative.startswith('.git/') or relative.startswith('_project-file-source/') or relative == 'project-files.json':
+                  continue
+              if relative.startswith('.github/'):
+                  mirrored = mirror / relative
+                  mirrored.parent.mkdir(parents=True, exist_ok=True)
+                  shutil.copy2(path, mirrored)
+                  source = f'_project-file-source/{relative}'
+              else:
+                  source = relative
+              files.append({'path': relative, 'source': source})
+
+          Path('project-files.json').write_text(
+              json.dumps(files, ensure_ascii=False, indent=2) + '\n',
+              encoding='utf-8'
+          )
+          print(f'Project manifest created: {len(files)} source files')
+          PY
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+      - name: Upload site artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
