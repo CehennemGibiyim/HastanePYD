@@ -1,0 +1,33 @@
+// ===== ITSM, CMDB VE DEĞİŞİKLİK MERKEZİ VERİ SERVİSİ =====
+import { readPlatform, writePlatform, uid, today } from './platform-storage.js';
+
+const KEY = 'it_service_center_v1';
+const ACTOR = 'CehennemGibiyim';
+
+const seedTickets = [
+  { id: 'itsm-t1', type: 'incident', title: 'Laboratuvar entegrasyonunda gecikmeli mesajlar', requester: 'Laboratuvar', owner: 'Entegrasyon Ekibi', priority: 'critical', status: 'in_progress', service: 'Laboratuvar Bilgi Sistemi', due: '2026-10-12', description: 'HL7 sonuç mesajlarında beş dakikayı aşan gecikmeler gözleniyor.', createdAt: '2026-09-08T08:20:00.000Z' },
+  { id: 'itsm-t2', type: 'request', title: 'Yeni klinik birim için rol talebi', requester: 'Başhekimlik', owner: 'Kimlik Ekibi', priority: 'high', status: 'open', service: 'Kimlik ve Erişim', due: '2026-10-15', description: 'Yeni birim için görev ve yetki matrisi hazırlanmalı.', createdAt: '2026-09-08T09:10:00.000Z' },
+  { id: 'itsm-t3', type: 'problem', title: 'Nöbet planı yayınlarında tekrarlayan hata', requester: 'İK Operasyon', owner: 'Uygulama Destek', priority: 'medium', status: 'resolved', service: 'Personel Yönetimi', due: '2026-09-05', description: 'Kök neden analizi tamamlandı ve yayın kontrolü eklendi.', createdAt: '2026-09-07T11:00:00.000Z' },
+];
+const seedAssets = [
+  { id: 'cmdb-a1', name: 'Hastane Bilgi Yönetim Sistemi', type: 'application', owner: 'BT Operasyon', environment: 'production', criticality: 'critical', status: 'active', dependencies: 'Veritabanı, Kimlik, HL7 ağ geçidi' },
+  { id: 'cmdb-a2', name: 'HL7 Entegrasyon Ağ Geçidi', type: 'integration', owner: 'Entegrasyon Ekibi', environment: 'production', criticality: 'critical', status: 'active', dependencies: 'HBYS, LIS, PACS' },
+  { id: 'cmdb-a3', name: 'Yoğun Bakım Monitör Ağı', type: 'medical_device', owner: 'Biyomedikal', environment: 'production', criticality: 'high', status: 'active', dependencies: 'Klinik komuta merkezi' },
+  { id: 'cmdb-a4', name: 'Yedekleme Kasası', type: 'infrastructure', owner: 'Bilgi Güvenliği', environment: 'recovery', criticality: 'high', status: 'active', dependencies: 'Kimlik, depolama' },
+];
+const seedChanges = [
+  { id: 'chg-1', title: 'MFA zorunluluğunun tüm yönetici hesaplarına yayılması', requester: 'Bilgi Güvenliği', owner: 'Kimlik Ekibi', risk: 'high', status: 'approved', planned: '2026-10-14', rollback: 'Önceki MFA politika sürümüne dönüş', service: 'Kimlik ve Erişim' },
+  { id: 'chg-2', title: 'PACS bağlantı sürüm güncellemesi', requester: 'Radyoloji', owner: 'Entegrasyon Ekibi', risk: 'critical', status: 'planned', planned: '2026-10-20', rollback: 'Mevcut sürüm imajı geri yüklenir', service: 'PACS' },
+];
+
+function defaultState() { return { version: 1, lastSync: new Date().toISOString(), tickets: seedTickets, assets: seedAssets, changes: seedChanges, audit: [] }; }
+function normalize(value) { const base = defaultState(); const source = value && typeof value === 'object' ? value : {}; return { ...base, ...source, tickets: Array.isArray(source.tickets) ? source.tickets : base.tickets, assets: Array.isArray(source.assets) ? source.assets : base.assets, changes: Array.isArray(source.changes) ? source.changes : base.changes, audit: Array.isArray(source.audit) ? source.audit : [] }; }
+async function save(state, action, detail) { const next = normalize({ ...state, lastSync: new Date().toISOString(), audit: [{ id: uid('itsm-audit'), at: new Date().toISOString(), actor: ACTOR, action, detail }, ...state.audit].slice(0, 300) }); await writePlatform(KEY, next); return next; }
+export async function loadITService() { return normalize(await readPlatform(KEY, defaultState())); }
+export async function addTicket(state, data) { const ticket = { id: uid('ticket'), type: data.type || 'incident', title: String(data.title || '').trim(), requester: String(data.requester || 'Genel').trim(), owner: String(data.owner || 'Atanmadı').trim(), priority: data.priority || 'medium', status: 'open', service: String(data.service || 'Genel hizmet').trim(), due: data.due || today(), description: String(data.description || '').trim(), createdAt: new Date().toISOString() }; if (!ticket.title) throw new Error('required'); return save({ ...state, tickets: [ticket, ...state.tickets] }, 'ticket_created', ticket.title); }
+export async function addAsset(state, data) { const asset = { id: uid('asset'), name: String(data.name || '').trim(), type: data.type || 'application', owner: String(data.owner || 'Atanmadı').trim(), environment: data.environment || 'production', criticality: data.criticality || 'medium', status: 'active', dependencies: String(data.dependencies || '').trim() }; if (!asset.name) throw new Error('required'); return save({ ...state, assets: [asset, ...state.assets] }, 'asset_created', asset.name); }
+export async function addChange(state, data) { const change = { id: uid('change'), title: String(data.title || '').trim(), requester: String(data.requester || 'Genel').trim(), owner: String(data.owner || 'Atanmadı').trim(), risk: data.risk || 'medium', status: 'planned', planned: data.planned || today(), rollback: String(data.rollback || '').trim(), service: String(data.service || 'Genel hizmet').trim() }; if (!change.title) throw new Error('required'); return save({ ...state, changes: [change, ...state.changes] }, 'change_created', change.title); }
+export async function updateTicket(state, id, patch) { return save({ ...state, tickets: state.tickets.map(item => item.id === id ? { ...item, ...patch, updatedAt: new Date().toISOString() } : item) }, 'ticket_updated', id); }
+export async function updateChange(state, id, patch) { return save({ ...state, changes: state.changes.map(item => item.id === id ? { ...item, ...patch, updatedAt: new Date().toISOString() } : item) }, 'change_updated', id); }
+export function summarize(state) { const open = state.tickets.filter(item => item.status !== 'resolved'); const overdue = open.filter(item => item.due && item.due < today()); return { tickets: state.tickets.length, open: open.length, overdue: overdue.length, assets: state.assets.length, criticalAssets: state.assets.filter(item => item.criticality === 'critical').length, pendingChanges: state.changes.filter(item => !['implemented', 'rolled_back'].includes(item.status)).length }; }
+export function exportITService(state) { const blob = new Blob([JSON.stringify({ exportedAt: new Date().toISOString(), actor: ACTOR, ...state }, null, 2)], { type: 'application/json' }); const link = document.createElement('a'); link.href = URL.createObjectURL(blob); link.download = `itsm-cmdb-kanit-${today()}.json`; link.click(); setTimeout(() => URL.revokeObjectURL(link.href), 1000); }

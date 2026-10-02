@@ -1,0 +1,14 @@
+// ===== AĞRI YÖNETİMİ MERKEZİ VERİ KATMANI =====
+const STORAGE_KEY = 'pain_management_center_v1';
+const statuses = ['new', 'intervention', 'reassess', 'controlled', 'escalated'];
+const risks = ['critical', 'high', 'medium', 'low'];
+const shiftDate = (days) => { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0, 10); };
+const seed = [
+  { id:'pain-1', patient:'M. A.', patientNo:'HST-24107', unit:'Ortopedi Servisi', painType:'Postoperatif ağrı', score:8, reassess:shiftDate(0), intervention:'IV analjezik + pozisyon desteği', responder:'Servis hemşireliği', risk:'high', status:'intervention', reassessed:false, note:'İlk değerlendirme sonrası hekim bilgilendirildi.' },
+  { id:'pain-2', patient:'F. D.', patientNo:'HST-23988', unit:'Onkoloji Ünitesi', painType:'Kronik ağrı', score:6, reassess:shiftDate(-1), intervention:'Ağrı ekibi konsültasyonu', responder:'Ağrı hemşiresi', risk:'critical', status:'reassess', reassessed:false, note:'Ağrı günlüğü ve non-farmakolojik destek planlandı.' },
+  { id:'pain-3', patient:'N. K.', patientNo:'HST-23812', unit:'Dahiliye Servisi', painType:'Kas-iskelet ağrısı', score:3, reassess:shiftDate(1), intervention:'Oral analjezik + sıcak uygulama', responder:'Hemşire Zeynep', risk:'medium', status:'controlled', reassessed:true, note:'Tekrar değerlendirmede skor 2.' },
+  { id:'pain-4', patient:'S. Y.', patientNo:'HST-23641', unit:'Acil Gözlem', painType:'Akut karın ağrısı', score:9, reassess:shiftDate(0), intervention:'Hekim değerlendirmesi bekleniyor', responder:'Acil gözlem ekibi', risk:'critical', status:'escalated', reassessed:false, note:'Yeni başlayan şiddetli ağrı; kırmızı bayraklar izleniyor.' },
+];
+const normalize = (item, index) => ({ id:item?.id || `pain-${Date.now()}-${index}`, patient:String(item?.patient || ''), patientNo:String(item?.patientNo || ''), unit:String(item?.unit || ''), painType:String(item?.painType || ''), score:Math.max(0, Math.min(10, Number(item?.score) || 0)), reassess:String(item?.reassess || shiftDate(0)), intervention:String(item?.intervention || ''), responder:String(item?.responder || ''), risk:risks.includes(item?.risk) ? item.risk : 'medium', status:statuses.includes(item?.status) ? item.status : 'new', reassessed:Boolean(item?.reassessed), note:String(item?.note || '') });
+export async function loadPainRecords() { try { const raw = await window.miniappsAI.storage.getItem(STORAGE_KEY); if (!raw) return seed.map(normalize); const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed.map(normalize) : seed.map(normalize); } catch (error) { console.warn('[Ağrı yönetimi] Kayıtlar okunamadı', error); return seed.map(normalize); } }
+export async function savePainRecords(records) { const safe = Array.isArray(records) ? records.map(normalize) : []; await window.miniappsAI.storage.setItem(STORAGE_KEY, JSON.stringify(safe)); return safe; }

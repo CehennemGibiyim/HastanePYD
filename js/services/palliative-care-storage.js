@@ -1,0 +1,14 @@
+// ===== PALYATİF BAKIM MERKEZİ VERİ KATMANI =====
+const STORAGE_KEY = 'palliative_care_center_v1';
+const statuses = ['new', 'active', 'family', 'review', 'completed'];
+const risks = ['critical', 'high', 'medium', 'low'];
+const shiftDate = (days) => { const d = new Date(); d.setDate(d.getDate() + days); return d.toISOString().slice(0, 10); };
+const seed = [
+  { id:'pall-1', patient:'A. T.', patientNo:'HST-25104', unit:'Palyatif Bakım Servisi', careType:'Konfor odaklı bakım', reviewDate:shiftDate(0), goal:'Ağrı ve nefes darlığını azaltma', lead:'Dr. Elif Kaya', risk:'high', status:'active', familyTalk:true, advancePlan:true, note:'Aile ile günlük hedefler ve ziyaret planı paylaşıldı.' },
+  { id:'pall-2', patient:'R. Ş.', patientNo:'HST-24876', unit:'Onkoloji Ünitesi', careType:'İleri hastalık desteği', reviewDate:shiftDate(-1), goal:'Semptom yükü ve bakım hedefleri', lead:'Palyatif bakım ekibi', risk:'critical', status:'family', familyTalk:false, advancePlan:false, note:'Aile görüşmesi ve bakım hedefleri toplantısı bekleniyor.' },
+  { id:'pall-3', patient:'N. B.', patientNo:'HST-24720', unit:'Dahiliye Servisi', careType:'Semptom yönetimi', reviewDate:shiftDate(1), goal:'Beslenme ve uyku konforu', lead:'Hemşirelik ekibi', risk:'medium', status:'review', familyTalk:true, advancePlan:true, note:'Bir sonraki ekip toplantısında hedefler yeniden gözden geçirilecek.' },
+  { id:'pall-4', patient:'C. E.', patientNo:'HST-24519', unit:'Evde Sağlık Birimi', careType:'Geçiş ve evde bakım', reviewDate:shiftDate(3), goal:'Güvenli evde bakım planı', lead:'Evde sağlık koordinatörü', risk:'low', status:'completed', familyTalk:true, advancePlan:true, note:'Bakım planı ve iletişim numaraları teslim edildi.' },
+];
+const normalize = (item, index) => ({ id:item?.id || `pall-${Date.now()}-${index}`, patient:String(item?.patient || ''), patientNo:String(item?.patientNo || ''), unit:String(item?.unit || ''), careType:String(item?.careType || ''), reviewDate:String(item?.reviewDate || shiftDate(0)), goal:String(item?.goal || ''), lead:String(item?.lead || ''), risk:risks.includes(item?.risk) ? item.risk : 'medium', status:statuses.includes(item?.status) ? item.status : 'new', familyTalk:Boolean(item?.familyTalk), advancePlan:Boolean(item?.advancePlan), note:String(item?.note || '') });
+export async function loadPalliativeRecords() { try { const raw = await window.miniappsAI.storage.getItem(STORAGE_KEY); if (!raw) return seed.map(normalize); const parsed = JSON.parse(raw); return Array.isArray(parsed) ? parsed.map(normalize) : seed.map(normalize); } catch (error) { console.warn('[Palyatif bakım] Kayıtlar okunamadı', error); return seed.map(normalize); } }
+export async function savePalliativeRecords(records) { const safe = Array.isArray(records) ? records.map(normalize) : []; await window.miniappsAI.storage.setItem(STORAGE_KEY, JSON.stringify(safe)); return safe; }
