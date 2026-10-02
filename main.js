@@ -1,11 +1,12 @@
 // ===== HASTANE PYS - GÜVENLİ BAŞLANGIÇ =====
 import { hydrateCentralStorage } from './js/services/central-storage-bridge.js?build=v88';
-import { initProjectDownload } from './js/utils/project-archive.js?build=v91';
+import { initProjectDownload } from './js/utils/project-archive.js?build=v95';
 
 const t = (key, values) => window.miniappI18n?.t(key, values) ?? key;
 
 async function boot() {
   try {
+    await window.__githubI18nReady;
     await hydrateCentralStorage();
     const app = await import('./js/app-core.js?build=v88');
     app.initApp();
@@ -72,4 +73,4 @@ function setupMobileMenu() {
 }
 
 document.addEventListener('DOMContentLoaded', boot);
-if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js?build=v91').catch(() => {});
+if ('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js?build=v95').catch(() => {});
