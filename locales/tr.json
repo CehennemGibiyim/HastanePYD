@@ -4638,6 +4638,7 @@
     "packaging": "ZIP dosyası oluşturuluyor…",
     "success": "Proje indirildi. {count} dosya arşive eklendi.",
     "partial": "Proje indirildi. {count} dosya alınamadı.",
+    "incomplete": "Arşiv tamamlanamadı. {count} dosya alınamadı: {files}",
     "error": "Proje indirilemedi. Lütfen tekrar deneyin."
   }
 }
